@@ -113,6 +113,14 @@ void WebUIPlugin::setupServer() {
     server.on("/api/scales/scan", [this](AsyncWebServerRequest *request) { handleBLEScaleScan(request); });
     server.on("/api/scales/info", [this](AsyncWebServerRequest *request) { handleBLEScaleInfo(request); });
     server.onNotFound([](AsyncWebServerRequest *request) { request->send(SPIFFS, "/w/index.html"); });
+    server.on("/api/mode/0", [this](AsyncWebServerRequest *request) {
+        controller->setMode(0);
+        request->send(200);
+    });
+    server.on("/api/mode/1", [this](AsyncWebServerRequest *request) {
+        controller->setMode(1);
+        request->send(200);
+    });
     server.serveStatic("/", SPIFFS, "/w").setDefaultFile("index.html").setCacheControl("max-age=0");
     ws.onEvent(
         [this](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
